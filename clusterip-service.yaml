@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service 
+metadata:
+  name: my-app-clusterip-service
+spec:
+  type: ClusterIP # ClusterIP, # NodePort, # LoadBalancer, # ExternalName
+  selector:
+    app: my-app
+  ports: 
+    - name: http
+      port: 80 # Service Port
+      targetPort: 8080 # Container Port
+

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app1-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      name: my-app-pod
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app-container
+          image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:2.0
+          ports:
+            - containerPort: 8080
