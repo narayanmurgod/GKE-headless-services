@@ -77,4 +77,148 @@ spec:
           image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:2.0
           ports:
             - containerPort: 8080
+```
+# Step-03: Kubernetes ClusterIP Service Configuration
 
+This file defines a Kubernetes `ClusterIP` service for an application called `my-app`. The service exposes the application to other pods within the Kubernetes cluster.
+
+### Service YAML Configuration
+
+```yaml
+apiVersion: v1
+kind: Service 
+metadata:
+  name: my-app-clusterip-service
+spec:
+  type: ClusterIP # ClusterIP, # NodePort, # LoadBalancer, # ExternalName
+  selector:
+    app: my-app
+  ports: 
+    - name: http
+      port: 80 # Service Port
+      targetPort: 8080 # Container Port
+```
+# Step-04: Kubernetes Headless Service Configuration
+
+This file defines a Kubernetes **Headless Service**, which does not assign a cluster IP. The service directly routes traffic to pods using their IPs.
+
+### VERY IMPORTANT NOTE
+When using a Headless Service, we should use both the **Service Port** and **Target Port** as the same.
+
+A Headless Service directly sends traffic to a Pod with the Pod IP and Container Port. DNS resolution directly happens from the Headless Service to the Pod IP.
+
+### Headless Service YAML Configuration
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-headless-service
+spec:
+  #type: ClusterIP # ClusterIP, # NodePort, # LoadBalancer, # ExternalName
+  clusterIP: None
+  selector:
+    app: my-app
+  ports:
+    - name: http
+      port: 8080 # Service Port
+      targetPort: 8080 # Container Port
+```
+# Step-05: Deploy Kubernetes Manifests
+
+This step involves deploying the Kubernetes manifests, checking the status of deployments, pods, and services, and observing the behavior of the Headless Service.
+
+## Deploy Kubernetes Manifests
+
+To deploy the Kubernetes manifests, use the following command:
+
+```bash
+kubectl apply -f deployment.yaml
+kubectl apply -f clusterip-service.yaml
+kubectl apply -f headless-service.yaml 
+kubectl apply -f curl-pod.yaml
+```
+# List Deployments
+```
+kubectl get deploy
+```
+
+# List Pods
+```
+kubectl get pods
+kubectl get pods -o wide
+```
+Observation: make a note of Pod IP
+
+# List Services
+```
+kubectl get svc
+```
+Observation: 
+1. "CLUSTER-IP" will be "NONE" for Headless Service
+
+## Sample 
+```
+Kalyans-Mac-mini:19-GKE-Headless-Service kalyanreddy$ kubectl get svc
+NAME                      TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes                ClusterIP   10.24.0.1    <none>        443/TCP   135m
+myapp1-cip-service        ClusterIP   10.24.2.34   <none>        80/TCP    4m9s
+myapp1-headless-service   ClusterIP   None         <none>        80/TCP    4m9s
+Kalyans-Mac-mini:19-GKE-Headless-Service kalyanreddy$ 
+```
+# Step-06: Review Curl Kubernetes Manifests
+
+This step focuses on reviewing a simple Kubernetes Pod manifest for running a `curl` container. The `curl` container will be used for making HTTP requests or other testing within the Kubernetes cluster.
+
+### Kubernetes Pod Manifest
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl-pod
+spec:
+  containers:
+  - name: curl
+    image: curlimages/curl 
+    command: [ "sleep", "600" ]
+```
+# Step-07: Deploy Curl-pod and Verify ClusterIP and Headless Services
+
+## Deploy curl-pod
+
+```bash
+kubectl apply -f curl-pod.yaml
+```
+
+## List Services
+```
+kubectl get svc
+```
+## GKE Cluster Kubernetes Service Full DNS Name Format
+```
+<svc>.<ns>.svc.cluster.local
+```
+## Open a Terminal Session into the Container
+```
+kubectl exec -it curl-pod -- sh
+```
+## ClusterIP Service: nslookup and curl Test
+```
+nslookup my-app-clusterip-service.default.svc.cluster.local
+curl my-app-clusterip-service.default.svc.cluster.local
+```
+## ClusterIP Service nslookup Output
+```
+
+```
+
+## Headless Service: nslookup and curl Test
+```
+nslookup my-app-headless-service.default.svc.cluster.local
+curl my-app-headless-service.default.svc.cluster.local:8080
+```
+## Headless Service nslookup Output
+```
+
+```
