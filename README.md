@@ -210,7 +210,20 @@ curl my-app-clusterip-service.default.svc.cluster.local
 ```
 ## ClusterIP Service nslookup Output
 ```
+murgod@cloudshell:~/GKE-headless-services$ kubectl exec -it curl-pod -- sh
+~ $ nslookup my-app-clusterip-service.default.svc.cluster.local
+Server:         169.254.20.10
+Address:        169.254.20.10:53
 
+
+Non-authoritative answer:
+Name:   my-app-clusterip-service.default.svc.cluster.local
+Address: 34.118.231.209
+
+~ $ curl my-app-clusterip-service.default.svc.cluster.local
+Hello, world!
+Version: 2.0.0
+Hostname: my-app-deployment-8694dc57-8n2wm
 ```
 
 ## Headless Service: nslookup and curl Test
@@ -220,5 +233,23 @@ curl my-app-headless-service.default.svc.cluster.local:8080
 ```
 ## Headless Service nslookup Output
 ```
+~ $ nslookup my-app-headless-service.default.svc.cluster.local
+Server:         169.254.20.10
+Address:        169.254.20.10:53
 
+
+Non-authoritative answer:
+Name:   my-app-headless-service.default.svc.cluster.local
+Address: 10.104.2.29
+Name:   my-app-headless-service.default.svc.cluster.local
+Address: 10.104.2.26
+Name:   my-app-headless-service.default.svc.cluster.local
+Address: 10.104.2.27
+Name:   my-app-headless-service.default.svc.cluster.local
+Address: 10.104.2.28
+
+~ $ curl my-app-headless-service.default.svc.cluster.local:8080
+Hello, world!
+Version: 2.0.0
+Hostname: my-app-deployment-8694dc57-ttzc8
 ```
