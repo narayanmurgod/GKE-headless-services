@@ -159,12 +159,12 @@ Observation:
 
 ## Sample 
 ```
-Kalyans-Mac-mini:19-GKE-Headless-Service kalyanreddy$ kubectl get svc
-NAME                      TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes                ClusterIP   10.24.0.1    <none>        443/TCP   135m
-myapp1-cip-service        ClusterIP   10.24.2.34   <none>        80/TCP    4m9s
-myapp1-headless-service   ClusterIP   None         <none>        80/TCP    4m9s
-Kalyans-Mac-mini:19-GKE-Headless-Service kalyanreddy$ 
+murgod@cloudshell:~/GKE-headless-services$ kubectl get svc
+NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes                 ClusterIP   34.118.224.1     <none>        443/TCP    14d
+my-app-clusterip-service   ClusterIP   34.118.231.209   <none>        80/TCP     46m
+my-app-headless-service    ClusterIP   None             <none>        8080/TCP   39m
+murgod@cloudshell:~/GKE-headless-services$ 
 ```
 # Step-06: Review Curl Kubernetes Manifests
 
