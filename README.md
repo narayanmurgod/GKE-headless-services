@@ -24,16 +24,13 @@ This repository demonstrates how to implement a **Headless Service** in **Google
 
      Replace `<CLUSTER-NAME>`, `<REGION>`, and `<PROJECT>` with your GKE cluster details.
 
-     Example:
-     ```bash
-     gcloud container clusters get-credentials standard-public-cluster-1 --region us-central1 --project kdaida123
-     ```
 
 3. **List GKE Kubernetes Worker Nodes**:
    Verify that your nodes are running correctly.
 
    ```bash
    kubectl get nodes
+   ```
 
 # Kubernetes ClusterIP and Headless Service
 
